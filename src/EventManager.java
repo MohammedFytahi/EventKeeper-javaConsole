@@ -83,5 +83,17 @@ public class EventManager {
         return (int) (Math.random() * 1000);
     }
 
+    public List<Event> getAllEvents() {
+        return new ArrayList<>(events); 
+    }
+
+public Event getEventById(int id) {
+        for (Event event : events) {
+            if (event.getId() == id) {
+                return event;
+            }
+        }
+        return null;
+    }
     
 }

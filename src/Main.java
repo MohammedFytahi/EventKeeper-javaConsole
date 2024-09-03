@@ -1,5 +1,4 @@
-// import java.util.ArrayList;
-// import java.util.List;
+
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -77,7 +76,7 @@ public class Main {
     }
 
     private static int generateUniqueUserId() {
-     // conteur dyal id
+     
         return (int) (Math.random() * 1000);
     }
 

@@ -1,120 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 import java.util.Scanner;
-
-
-class Person {
-    private int id;
-    private String name;
-    private String email;
-
-    public Person(int id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
-
-
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-
-    public void setName(String name) { this.name = name; }
-    public void setEmail(String email) { this.email = email; }
-}
-
-
-class Admin extends Person {
-    private EventManager eventManager;
-    private ParticipantManager participantManager;
-
-    public Admin(int id, String name, String email, EventManager eventManager, ParticipantManager participantManager) {
-        super(id, name, email);
-        this.eventManager = eventManager;
-        this.participantManager = participantManager;
-    }
-
-    public void addEvent(String name, String date, String location, String type) {
-        eventManager.addEvent(name, date, location, type);
-    }
-
-    public void updateEvent(int id, String name, String date, String location, String type) {
-        eventManager.updateEvent(id, name, date, location, type);
-    }
-
-    public void deleteEvent(int id) {
-        eventManager.deleteEvent(id);
-    }
-
-    public void listEvents() {
-        eventManager.listEvents();
-    }
-
-    public void searchEventsByType(String type) {
-        eventManager.searchEventsByType(type);
-    }
-
-
-    public void addParticipant(String name, String email) {
-        participantManager.addParticipant(name, email);
-    }
-
-    public void updateParticipant(int id, String name, String email) {
-        participantManager.updateParticipant(id, name, email);
-    }
-
-    public void deleteParticipant(int id) {
-        participantManager.deleteParticipant(id);
-    }
-
-    public void listParticipants() {
-        participantManager.listParticipants();
-    }
-}
-
-
-class User extends Person {
-    private List<Event> registeredEvents = new ArrayList<>();
-
-    public User(int id, String name, String email) {
-        super(id, name, email);
-    }
-
-    public void listEvents(EventManager eventManager) {
-        eventManager.listEvents();
-    }
-
-    public void searchEventsByType(EventManager eventManager, String type) {
-        eventManager.searchEventsByType(type);
-    }
-
-    public void listParticipants(ParticipantManager participantManager) {
-        participantManager.listParticipants();
-    }
-
-    public void registerForEvent(EventManager eventManager, int eventId) {
-        Event event = eventManager.getEventById(eventId);
-        if (event != null) {
-            registeredEvents.add(event);
-            System.out.println("Registered for event: " + event);
-        } else {
-            System.out.println("Event not found with ID: " + eventId);
-        }
-    }
-
-    public void listRegisteredEvents() {
-        if (registeredEvents.isEmpty()) {
-            System.out.println("No registered events.");
-        } else {
-            for (Event event : registeredEvents) {
-                System.out.println(event);
-            }
-        }
-    }
-}
-
-
-
+import java.util.regex.Pattern;
 
 public class Main {
     private static EventManager eventManager = new EventManager();
@@ -124,9 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int choice;
 
- 
         Admin admin = new Admin(1, "Admin", "admin@example.com", eventManager, participantManager);
-        User user = new User(2, "User", "user@example.com");
 
         do {
             System.out.println("\n=== Event Management System ===");
@@ -135,14 +20,17 @@ public class Main {
             System.out.println("3. Quit");
             System.out.print("Choose your role: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
                     adminMenu(scanner, admin);
                     break;
                 case 2:
-                    userMenu(scanner, user);
+                    User user = registerUser(scanner);
+                    if (user != null) {
+                        userMenu(scanner, user);
+                    }
                     break;
                 case 3:
                     System.out.println("Exiting the system.");
@@ -154,6 +42,45 @@ public class Main {
         scanner.close();
     }
 
+    private static User registerUser(Scanner scanner) {
+        System.out.println("\n=== User Registration ===");
+        String name;
+        String email;
+
+        do {
+            System.out.print("Enter your name: ");
+            name = scanner.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty. Please enter a valid name.");
+            }
+        } while (name.isEmpty());
+
+        do {
+            System.out.print("Enter your email: ");
+            email = scanner.nextLine();
+            if (!isValidEmail(email)) {
+                System.out.println("Invalid email format. Please enter a valid email.");
+            }
+        } while (!isValidEmail(email));
+
+
+        int userId = generateUniqueUserId();
+        User user = new User(userId, name, email);
+        System.out.println("User registered successfully with ID: " + userId);
+        return user;
+    }
+
+    private static boolean isValidEmail(String email) {
+
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        return Pattern.matches(emailRegex, email);
+    }
+
+    private static int generateUniqueUserId() {
+     // conteur dyal id
+        return (int) (Math.random() * 1000);
+    }
+
     private static void adminMenu(Scanner scanner, Admin admin) {
         int choice;
         do {
@@ -162,11 +89,15 @@ public class Main {
             System.out.println("2. Update Event");
             System.out.println("3. Delete Event");
             System.out.println("4. List Events");
-       
+            System.out.println("5. Search Events by Type");
+            System.out.println("6. Add Participant");
+            System.out.println("7. Update Participant");
+            System.out.println("8. Delete Participant");
+            System.out.println("9. List Participants");
             System.out.println("10. Back to Main Menu");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -178,12 +109,16 @@ public class Main {
                     String location = scanner.nextLine();
                     System.out.print("Enter event type: ");
                     String type = scanner.nextLine();
-                    admin.addEvent(name, date, location, type);
+                    if (isValidDate(date)) {
+                        admin.addEvent(name, date, location, type);
+                    } else {
+                        System.out.println("Invalid date format. Please enter date in yyyy-mm-dd format.");
+                    }
                     break;
                 case 2:
                     System.out.print("Enter event ID to update: ");
                     int eventId = scanner.nextInt();
-                    scanner.nextLine(); 
+                    scanner.nextLine();
                     System.out.print("Enter new event name: ");
                     name = scanner.nextLine();
                     System.out.print("Enter new event date (yyyy-mm-dd): ");
@@ -192,13 +127,21 @@ public class Main {
                     location = scanner.nextLine();
                     System.out.print("Enter new event type: ");
                     type = scanner.nextLine();
-                    admin.updateEvent(eventId, name, date, location, type);
+                    if (isValidDate(date) && eventId > 0) {
+                        admin.updateEvent(eventId, name, date, location, type);
+                    } else {
+                        System.out.println("Invalid input. Ensure the date format is yyyy-mm-dd and event ID is positive.");
+                    }
                     break;
                 case 3:
                     System.out.print("Enter event ID to delete: ");
                     eventId = scanner.nextInt();
-                    scanner.nextLine(); 
-                    admin.deleteEvent(eventId);
+                    scanner.nextLine();
+                    if (eventId > 0) {
+                        admin.deleteEvent(eventId);
+                    } else {
+                        System.out.println("Event ID must be a positive number.");
+                    }
                     break;
                 case 4:
                     admin.listEvents();
@@ -213,23 +156,35 @@ public class Main {
                     String participantName = scanner.nextLine();
                     System.out.print("Enter participant email: ");
                     String email = scanner.nextLine();
-                    admin.addParticipant(participantName, email);
+                    if (!participantName.isEmpty() && isValidEmail(email)) {
+                        admin.addParticipant(participantName, email);
+                    } else {
+                        System.out.println("Invalid name or email format.");
+                    }
                     break;
                 case 7:
                     System.out.print("Enter participant ID to update: ");
                     int participantId = scanner.nextInt();
-                    scanner.nextLine(); 
+                    scanner.nextLine();
                     System.out.print("Enter new participant name: ");
                     participantName = scanner.nextLine();
                     System.out.print("Enter new participant email: ");
                     email = scanner.nextLine();
-                    admin.updateParticipant(participantId, participantName, email);
+                    if (!participantName.isEmpty() && isValidEmail(email) && participantId > 0) {
+                        admin.updateParticipant(participantId, participantName, email);
+                    } else {
+                        System.out.println("Invalid input. Ensure name is not empty, email is valid, and ID is positive.");
+                    }
                     break;
                 case 8:
                     System.out.print("Enter participant ID to delete: ");
                     participantId = scanner.nextInt();
-                    scanner.nextLine(); 
-                    admin.deleteParticipant(participantId);
+                    scanner.nextLine();
+                    if (participantId > 0) {
+                        admin.deleteParticipant(participantId);
+                    } else {
+                        System.out.println("Participant ID must be a positive number.");
+                    }
                     break;
                 case 9:
                     admin.listParticipants();
@@ -248,11 +203,13 @@ public class Main {
         do {
             System.out.println("\n=== User Menu ===");
             System.out.println("1. List Events");
-           
+            System.out.println("2. Search Events by Type");
+            System.out.println("3. Register for an Event");
+            System.out.println("4. List Registered Events");
             System.out.println("5. Back to Main Menu");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -266,8 +223,12 @@ public class Main {
                 case 3:
                     System.out.print("Enter event ID to register for: ");
                     int eventId = scanner.nextInt();
-                    scanner.nextLine(); 
-                    user.registerForEvent(eventManager, eventId);
+                    scanner.nextLine();
+                    if (eventId > 0) {
+                        user.registerForEvent(eventManager, eventId);
+                    } else {
+                        System.out.println("Event ID must be a positive number.");
+                    }
                     break;
                 case 4:
                     user.listRegisteredEvents();
@@ -279,5 +240,11 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != 5);
+    }
+
+    private static boolean isValidDate(String date) {
+       
+        String dateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
+        return Pattern.matches(dateRegex, date);
     }
 }

@@ -1,3 +1,5 @@
+import java.util.List;
+
 class Admin extends Person {
     private EventManager eventManager;
     private ParticipantManager participantManager;
@@ -42,5 +44,28 @@ class Admin extends Person {
 
     public void listParticipants() {
         participantManager.listParticipants();
+    }
+
+    public void generateReport() {
+        System.out.println("\n=== Rapport des Événements ===");
+        List<Event> events = eventManager.getAllEvents();
+        if (events.isEmpty()) {
+            System.out.println("Aucun événement trouvé.");
+        } else {
+            for (Event event : events) {
+                System.out.println("ID: " + event.getId() + ", Nom: " + event.getName() + ", Date: " + event.getDate() +
+                                   ", Lieu: " + event.getLocation() + ", Type: " + event.getType());
+            }
+        }
+
+        System.out.println("\n=== Rapport des Participants ===");
+        List<Person> participants = participantManager.getAllParticipants();
+        if (participants.isEmpty()) {
+            System.out.println("Aucun participant trouvé.");
+        } else {
+            for (Person participant : participants) {
+                System.out.println("ID: " + participant.getId() + ", Nom: " + participant.getName() + ", Email: " + participant.getEmail());
+            }
+        }
     }
 }

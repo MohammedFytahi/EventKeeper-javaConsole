@@ -1,55 +1,87 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class EventManager {
+public class EventManager {
     private List<Event> events = new ArrayList<>();
-    private int nextEventId = 1;
 
     public void addEvent(String name, String date, String location, String type) {
-        Event event = new Event(nextEventId++, name, date, location, type);
+        int id = generateUniqueEventId();
+        Event event = new Event(id, name, date, location, type);
         events.add(event);
-        System.out.println("Event added: " + event);
+        System.out.println("Event added successfully.");
     }
 
-    public void updateEvent(int id, String name, String date, String location, String type) {
+    public void updateEvent(int eventId, String name, String date, String location, String type) {
         for (Event event : events) {
-            if (event.getId() == id) {
+            if (event.getId() == eventId) {
                 event.setName(name);
                 event.setDate(date);
                 event.setLocation(location);
                 event.setType(type);
-                System.out.println("Event updated: " + event);
+                System.out.println("Event updated successfully.");
                 return;
             }
         }
-        System.out.println("Event not found with ID: " + id);
+        System.out.println("Event not found with ID: " + eventId);
     }
 
-    public void deleteEvent(int id) {
-        events.removeIf(event -> event.getId() == id);
-        System.out.println("Event deleted with ID: " + id);
+    public void deleteEvent(int eventId) {
+        events.removeIf(event -> event.getId() == eventId);
+        System.out.println("Event deleted successfully.");
     }
 
     public void listEvents() {
-        for (Event event : events) {
-            System.out.println(event);
-        }
-    }
-
-    public void searchEventsByType(String type) {
-        for (Event event : events) {
-            if (event.getType().equalsIgnoreCase(type)) {
+        if (events.isEmpty()) {
+            System.out.println("No events available.");
+        } else {
+            for (Event event : events) {
                 System.out.println(event);
             }
         }
     }
 
-    public Event getEventById(int id) {
+    public void searchEventsByType(String type) {
+        boolean found = false;
         for (Event event : events) {
-            if (event.getId() == id) {
-                return event;
+            if (event.getType().equalsIgnoreCase(type)) {
+                System.out.println(event);
+                found = true;
             }
         }
-        return null;
+        if (!found) {
+            System.out.println("No events found for type: " + type);
+        }
     }
+
+    public void searchEventsByDate(String date) {
+        boolean found = false;
+        for (Event event : events) {
+            if (event.getDate().equals(date)) {
+                System.out.println(event);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No events found for date: " + date);
+        }
+    }
+
+    public void searchEventsByLocation(String location) {
+        boolean found = false;
+        for (Event event : events) {
+            if (event.getLocation().equalsIgnoreCase(location)) {
+                System.out.println(event);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No events found for location: " + location);
+        }
+    }
+
+    private int generateUniqueEventId() {
+        return (int) (Math.random() * 1000);
+    }
+
+    
 }

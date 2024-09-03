@@ -29,7 +29,7 @@ public class Main {
                 case 2:
                     User user = registerUser(scanner);
                     if (user != null) {
-                        userMenu(scanner, user);
+                        userMenu(scanner, user, eventManager);
                     }
                     break;
                 case 3:
@@ -84,20 +84,21 @@ public class Main {
     private static void adminMenu(Scanner scanner, Admin admin) {
         int choice;
         do {
-            System.out.println("\n=== Admin Menu ===");
-            System.out.println("1. Add Event");
-            System.out.println("2. Update Event");
-            System.out.println("3. Delete Event");
-            System.out.println("4. List Events");
-            System.out.println("5. Search Events by Type");
-            System.out.println("6. Add Participant");
-            System.out.println("7. Update Participant");
-            System.out.println("8. Delete Participant");
-            System.out.println("9. List Participants");
-            System.out.println("10. Back to Main Menu");
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println("\n=== Menu Admin ===");
+        System.out.println("1. Ajouter un événement");
+        System.out.println("2. Mettre à jour un événement");
+        System.out.println("3. Supprimer un événement");
+        System.out.println("4. Lister les événements");
+        System.out.println("5. Rechercher des événements ");
+        System.out.println("6. Ajouter un participant");
+        System.out.println("7. Mettre à jour un participant");
+        System.out.println("8. Supprimer un participant");
+        System.out.println("9. Lister les participants");
+        System.out.println("10. Générer un rapport"); 
+        System.out.println("11. Retourner au menu principal");
+        System.out.print("Entrez votre choix : ");
+        choice = scanner.nextInt();
+        scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
@@ -190,45 +191,41 @@ public class Main {
                     admin.listParticipants();
                     break;
                 case 10:
-                    System.out.println("Returning to Main Menu.");
+                admin.generateReport();
                     break;
+                    case 11:
+                     System.out.println("Retour au menu principal.");
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 10);
+        } while (choice != 11);
     }
 
-    private static void userMenu(Scanner scanner, User user) {
+    private static void userMenu(Scanner scanner, User user, EventManager eventManager) { 
         int choice;
         do {
             System.out.println("\n=== User Menu ===");
             System.out.println("1. List Events");
-            System.out.println("2. Search Events by Type");
+            System.out.println("2. Search Events");
             System.out.println("3. Register for an Event");
             System.out.println("4. List Registered Events");
             System.out.println("5. Back to Main Menu");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
                     user.listEvents(eventManager);
                     break;
                 case 2:
-                    System.out.print("Enter event type to search: ");
-                    String type = scanner.nextLine();
-                    user.searchEventsByType(eventManager, type);
+                    searchMenu(scanner, user, eventManager);
                     break;
                 case 3:
                     System.out.print("Enter event ID to register for: ");
                     int eventId = scanner.nextInt();
-                    scanner.nextLine();
-                    if (eventId > 0) {
-                        user.registerForEvent(eventManager, eventId);
-                    } else {
-                        System.out.println("Event ID must be a positive number.");
-                    }
+                    scanner.nextLine(); 
+                    user.registerForEvent(eventManager, eventId);
                     break;
                 case 4:
                     user.listRegisteredEvents();
@@ -241,6 +238,45 @@ public class Main {
             }
         } while (choice != 5);
     }
+
+    private static void searchMenu(Scanner scanner, User user, EventManager eventManager) {
+        int choice;
+        do {
+            System.out.println("\n=== Search Menu ===");
+            System.out.println("1. Search Events by Type");
+            System.out.println("2. Search Events by Date");
+            System.out.println("3. Search Events by Location");
+            System.out.println("4. Back to User Menu");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter event type to search: ");
+                    String type = scanner.nextLine();
+                    user.searchEventsByType(eventManager, type);
+                    break;
+                case 2:
+                    System.out.print("Enter event date to search (yyyy-mm-dd): ");
+                    String date = scanner.nextLine();
+                    user.searchEventsByDate(eventManager, date); 
+                    break;
+                case 3:
+                    System.out.print("Enter event location to search: ");
+                    String location = scanner.nextLine();
+                    user.searchEventsByLocation(eventManager, location); 
+                    break;
+                case 4:
+                    System.out.println("Returning to User Menu.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 4);
+    }
+
+    
 
     private static boolean isValidDate(String date) {
        

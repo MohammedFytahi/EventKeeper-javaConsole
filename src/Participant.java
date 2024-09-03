@@ -20,42 +20,5 @@ public class Participant {
     public void setName(String name) { this.name = name; }
     public void setEmail(String email) { this.email = email; }
 
-    @Override
-    public String toString() {
-        return "Participant [ID=" + id + ", Name=" + name + ", Email=" + email + "]";
-    }
-
-   
-    public static void addParticipant(List<Participant> participants, int participantIdCounter, String name, String email) {
-        Participant participant = new Participant(participantIdCounter++, name, email);
-        participants.add(participant);
-        System.out.println("Participant added: " + participant);
-    }
-
-    public static void updateParticipant(List<Participant> participants, int id, String name, String email) {
-        for (Participant participant : participants) {
-            if (participant.getId() == id) {
-                participant.setName(name);
-                participant.setEmail(email);
-                System.out.println("Participant updated: " + participant);
-                return;
-            }
-        }
-        System.out.println("Participant not found with ID: " + id);
-    }
-
-    public static void deleteParticipant(List<Participant> participants, int id) {
-        participants.removeIf(participant -> participant.getId() == id);
-        System.out.println("Participant deleted with ID: " + id);
-    }
-
-    public static void listParticipants(List<Participant> participants) {
-        if (participants.isEmpty()) {
-            System.out.println("No participants found.");
-        } else {
-            for (Participant participant : participants) {
-                System.out.println(participant);
-            }
-        }
-    }
+    
 }

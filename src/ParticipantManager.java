@@ -33,4 +33,8 @@ class ParticipantManager {
             System.out.println(participant);
         }
     }
+
+    public List<Person> getAllParticipants() {
+        return new ArrayList<>(participants); 
+    }
 }

@@ -1,4 +1,4 @@
-class Person {
+public class Person {
     private int id;
     private String name;
     private String email;
@@ -15,4 +15,10 @@ class Person {
 
     public void setName(String name) { this.name = name; }
     public void setEmail(String email) { this.email = email; }
+
+   
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Nom: " + name + ", Email: " + email;
+    }
 }

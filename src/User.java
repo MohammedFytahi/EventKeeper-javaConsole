@@ -19,13 +19,9 @@ public class User extends Person {
     public void searchEventsByDate(EventManager eventManager, String date){
         eventManager.searchEventsByDate(date);
     }
+
     public void searchEventsByLocation(EventManager eventManager, String location) {
         eventManager.searchEventsByLocation(location);
-    }
-    
-
-    public void listParticipants(ParticipantManager participantManager) {
-        participantManager.listParticipants();
     }
 
     public void registerForEvent(EventManager eventManager, int eventId) {
@@ -46,6 +42,16 @@ public class User extends Person {
             for (Event event : registeredEvents) {
                 System.out.println(event);
             }
+        }
+    }
+
+    public void unregisterFromEvent(EventManager eventManager, int eventId) {
+        Event event = eventManager.getEventById(eventId);
+        if (event != null && registeredEvents.contains(event)) {
+            registeredEvents.remove(event);
+            System.out.println("Unregistered from event: " + event.getName());
+        } else {
+            System.out.println("Event not found or not registered with ID: " + eventId);
         }
     }
 }

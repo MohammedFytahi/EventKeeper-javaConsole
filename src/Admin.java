@@ -29,6 +29,15 @@ class Admin extends Person {
     public void searchEventsByType(String type) {
         eventManager.searchEventsByType(type);
     }
+    public void searchEventsByDate(String date) {
+        eventManager.searchEventsByDate(date);
+    }
+
+    public void searchEventsByLocation(String location) {
+        eventManager.searchEventsByLocation(location);
+    }
+
+
 
     public void addParticipant(String name, String email) {
         participantManager.addParticipant(name, email);
